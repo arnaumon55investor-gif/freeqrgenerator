@@ -6,10 +6,12 @@
 <meta name="monetag" content="46b26d716b1f6011ea22be4dc8c54511">
 
 <script src="https://quge5.com/88/tag.min.js" data-zone="215013" async data-cfasync="false"></script>
-  
-<title>Link → QR Generator Pro</title
-  
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<title>Link → QR Generator Pro</title>
+
+<!-- QR LIBRARY (STABLE CDN) -->
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
@@ -23,7 +25,7 @@ font-family:'Poppins',sans-serif;
 
 body{
 min-height:100vh;
-background:linear-gradient(135deg,#0f0f17,#1a1a2a);
+background:linear-gradient(135deg,#0f0f17,#111827);
 color:white;
 display:flex;
 justify-content:center;
@@ -48,6 +50,7 @@ animation:fadeIn 0.8s ease;
 
 h1{
 margin-bottom:20px;
+font-size:26px;
 }
 
 input{
@@ -78,7 +81,7 @@ transform:scale(1.05);
 opacity:0.9;
 }
 
-.download-btn{
+.download{
 background:#22c55e;
 }
 
@@ -123,10 +126,6 @@ border-radius:20px;
 max-width:600px;
 max-height:80vh;
 overflow:auto;
-}
-
-.modal-content h2{
-margin-bottom:15px;
 }
 
 .modal-content button{
@@ -179,7 +178,7 @@ to{opacity:1;transform:translateY(0);}
 <input type="text" id="linkInput" placeholder="Paste your link here...">
 
 <button onclick="generateQR()">Generate QR</button>
-<button class="download-btn" onclick="downloadQR()">Download QR</button>
+<button class="download" onclick="downloadQR()">Download QR</button>
 
 <div id="qrcode"></div>
 
@@ -198,8 +197,8 @@ Private Tool •
 <p><strong>Last updated:</strong> 2026</p>
 <br>
 <p>This tool generates QR codes locally inside your browser.</p>
-<p>We do NOT store, track, or transmit your links to any server.</p>
-<p>All data remains on your device.</p>
+<p>We do NOT store, track or transmit your links to any server.</p>
+<p>All data stays on your device.</p>
 <br>
 <button onclick="closePrivacy()">Close</button>
 </div>
@@ -210,7 +209,7 @@ Private Tool •
 <div class="modal" id="cookieModal">
 <div class="modal-content">
 <h2>Cookie Preferences</h2>
-<p>We use cookies only to store preferences.</p>
+<p>Cookies are used only to store preferences.</p>
 <br>
 <label>
 <input type="checkbox" id="analytics">
@@ -225,29 +224,40 @@ Enable analytics cookies
 <!-- COOKIE BANNER -->
 
 <div class="cookie-banner" id="cookieBanner">
-This website uses cookies to improve experience.
+This website uses cookies.
 <button class="accept" onclick="acceptCookies()">Accept</button>
 <button class="reject" onclick="rejectCookies()">Reject</button>
 </div>
 
 <script>
 
+/* QR GENERATOR */
+
 function generateQR(){
 
 const link=document.getElementById("linkInput").value;
-if(!link) return;
+const container=document.getElementById("qrcode");
 
-document.getElementById("qrcode").innerHTML="";
+if(!link){
+alert("Please enter a link");
+return;
+}
 
-new QRCode(document.getElementById("qrcode"),{
+container.innerHTML="";
+
+setTimeout(()=>{
+new QRCode(container,{
 text:link,
 width:230,
 height:230,
 colorDark:"#ffffff",
 colorLight:"transparent"
 });
+},100);
 
 }
+
+/* DOWNLOAD */
 
 function downloadQR(){
 const img=document.querySelector("#qrcode img");
@@ -291,11 +301,11 @@ document.getElementById("cookieBanner").style.display="none";
 
 function saveCookies(){
 const analytics=document.getElementById("analytics").checked;
-localStorage.setItem("cookieConsent", analytics ? "analytics" : "necessary");
+localStorage.setItem("cookieConsent",analytics?"analytics":"necessary");
 closeCookies();
 }
 
-/* SHOW COOKIE BANNER ON LOAD */
+/* SHOW COOKIE BANNER */
 
 window.onload=function(){
 if(!localStorage.getItem("cookieConsent")){
